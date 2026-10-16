@@ -846,6 +846,39 @@ document.getElementById("themeToggle").addEventListener("click", () => {
   applyTheme(next);
 });
 
+/* ===== Reel aus dem Kurzbefehl übernehmen =====
+   Adresse wie ...?reel=https://instagram.com/reel/... → Link wird ins Reel-Feld eingetragen. */
+function takePendingReelFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get("reel");
+  if (!raw) return;
+
+  const match = raw.match(/https?:\/\/[^\s]+/);
+  try {
+    if (match) localStorage.setItem("mein-dashboard-pending-reel", match[0]);
+  } catch {
+    // Speicher nicht verfügbar: der Link wird dann nicht übernommen.
+  }
+  window.history.replaceState(null, "", window.location.pathname);
+}
+
+function applyPendingReel() {
+  let pending = null;
+  try {
+    pending = localStorage.getItem("mein-dashboard-pending-reel");
+    if (pending) localStorage.removeItem("mein-dashboard-pending-reel");
+  } catch {
+    return;
+  }
+  if (!pending) return;
+
+  document.getElementById("reelUrl").value = pending;
+  document.getElementById("reelForm").scrollIntoView({ behavior: "smooth", block: "center" });
+  document.getElementById("reelTitle").focus();
+}
+
+takePendingReelFromUrl();
+
 /* ===== Start ===== */
 initTheme();
 
@@ -860,7 +893,7 @@ if (!window.supabase || !window.DASHBOARD_CONFIG) {
   sb.auth.onAuthStateChange((_event, session) => {
     if (session?.user) {
       showApp();
-      loadAll();
+      loadAll().then(applyPendingReel);
     } else {
       showLogin();
     }
