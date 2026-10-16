@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Mein persönliches Dashboard">
+  <title>Mein Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Anmeldung -->
+<main id="loginView" class="login" hidden>
+  <section class="card login-card">
+    <h1>Mein Dashboard</h1>
+    <p class="muted">Gib deine E-Mail-Adresse ein. Du bekommst einen Anmelde-Link.</p>
+    <form id="loginForm" class="stack">
+      <input id="loginEmail" type="email" placeholder="E-Mail-Adresse" required autocomplete="email">
+      <button type="submit" class="primary">Anmelde-Link senden</button>
+    </form>
+    <p id="loginMsg" class="small muted" aria-live="polite"></p>
+  </section>
+</main>
+
+<!-- Dashboard (nach der Anmeldung) -->
+<div id="appView" hidden>
+
+<header class="topbar">
+  <div class="brand">Mein Dashboard</div>
+  <div class="top-actions">
+    <button type="button" id="themeToggle" class="icon-btn" aria-label="Hell/Dunkel umschalten">☾</button>
+    <button type="button" id="logoutBtn" class="ghost">Abmelden</button>
+  </div>
+</header>
+
+<main class="grid">
+
+  <section class="card hero">
+    <p class="eyebrow" id="todayDate"></p>
+    <h1 id="greeting"></h1>
+    <div class="stats">
+      <div><span id="statOpen">0</span><small>offen</small></div>
+      <div><span id="statWeek">0</span><small>nächste 7 Tage</small></div>
+      <div><span id="statOverdue">0</span><small>überfällig</small></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Nächste 7 Tage</h2>
+    <ul class="list" id="weekList"></ul>
+  </section>
+
+  <section class="card span-2" id="tasks">
+    <h2>Aufgaben</h2>
+    <form id="taskForm" class="form-grid">
+      <input id="taskTitle" placeholder="Neue Aufgabe" required maxlength="200" autocomplete="off">
+      <input id="taskDue" type="date" aria-label="Fälligkeitsdatum">
+      <select id="taskCategory" aria-label="Kategorie"></select>
+      <input id="taskSub" placeholder="Unterbereich (optional)" maxlength="60" autocomplete="off">
+      <select id="taskPriority" aria-label="Priorität">
+        <option value="hoch">Hoch</option>
+        <option value="mittel" selected>Mittel</option>
+        <option value="niedrig">Niedrig</option>
+      </select>
+      <button type="submit" class="primary">Hinzufügen</button>
+    </form>
+    <div class="chips" id="taskFilterChips"></div>
+    <ul class="list" id="taskList"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Schnelle Notizen</h2>
+    <form id="noteForm" class="stack">
+      <textarea id="noteText" rows="3" placeholder="Gedanke, Idee, Einkaufsliste …" maxlength="5000"></textarea>
+      <select id="noteCategory" aria-label="Kategorie der Notiz"></select>
+      <button type="submit" class="primary">Notiz speichern</button>
+    </form>
+    <div class="chips" id="noteFilterChips"></div>
+    <ul class="list" id="noteList"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Schnellzugriffe</h2>
+    <form id="linkForm" class="stack">
+      <input id="linkName" placeholder="Name (optional)" maxlength="100" autocomplete="off">
+      <input id="linkUrl" placeholder="Adresse, z. B. example.de" required autocomplete="off" inputmode="url">
+      <select id="linkCategory" aria-label="Bereich des Links"></select>
+      <button type="submit" class="primary">Link hinzufügen</button>
+    </form>
+    <div id="linkList" class="groups"></div>
+  </section>
+
+  <section class="card">
+    <h2>Reels aus Instagram</h2>
+    <form id="reelForm" class="stack">
+      <input id="reelUrl" placeholder="Link zum Reel einfügen" required autocomplete="off" inputmode="url">
+      <input id="reelTitle" placeholder="Titel (optional)" maxlength="200" autocomplete="off">
+      <select id="reelCategory" aria-label="Kategorie des Reels"></select>
+      <textarea id="reelNote" rows="2" placeholder="Beschreibung oder Stichpunkte (optional)" maxlength="5000"></textarea>
+      <button type="submit" class="primary">Reel speichern</button>
+    </form>
+    <ul class="list" id="reelList"></ul>
+  </section>
+
+  <section class="card span-2" id="trips">
+    <h2>Camper &amp; Reisen</h2>
+    <form id="tripForm" class="form-grid trip-form">
+      <input id="tripTitle" placeholder="Name der Reise oder Tour" required maxlength="200" autocomplete="off">
+      <select id="tripKind" aria-label="Art">
+        <option value="Reise">Reise</option>
+        <option value="Trekking &amp; Campen">Trekking &amp; Campen</option>
+      </select>
+      <input id="tripLocation" placeholder="Ort / Region" maxlength="200" autocomplete="off">
+      <input id="tripStart" type="date" aria-label="Start">
+      <input id="tripEnd" type="date" aria-label="Ende">
+      <button type="submit" class="primary">Anlegen</button>
+    </form>
+    <ul class="list" id="tripList"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Bereiche (Kategorien)</h2>
+    <form id="catForm" class="inline-form">
+      <input id="catName" placeholder="Neuer Bereich" required maxlength="60" autocomplete="off">
+      <button type="submit" class="primary">Hinzufügen</button>
+    </form>
+    <ul class="list" id="catList"></ul>
+  </section>
+
+</main>
+
+</div>
+
+<!-- Bearbeiten-Dialog -->
+<dialog id="editDialog">
+  <form id="editForm" class="stack">
+    <h2 id="editHeading">Bearbeiten</h2>
+    <label data-for="task link reel trip">Titel / Name
+      <input id="editTitle" maxlength="200" autocomplete="off">
+    </label>
+    <label data-for="link reel">Adresse
+      <input id="editUrl" autocomplete="off" inputmode="url">
+    </label>
+    <label data-for="task note link reel">Bereich
+      <select id="editCategory"></select>
+    </label>
+    <label data-for="task">Unterbereich
+      <input id="editSub" maxlength="60" autocomplete="off">
+    </label>
+    <label data-for="task">Fällig am
+      <input id="editDue" type="date">
+    </label>
+    <label data-for="task">Priorität
+      <select id="editPriority">
+        <option value="hoch">Hoch</option>
+        <option value="mittel">Mittel</option>
+        <option value="niedrig">Niedrig</option>
+      </select>
+    </label>
+    <label data-for="trip">Ort / Region
+      <input id="editLocation" maxlength="200" autocomplete="off">
+    </label>
+    <label data-for="trip">Start
+      <input id="editStart" type="date">
+    </label>
+    <label data-for="trip">Ende
+      <input id="editEnd" type="date">
+    </label>
+    <label data-for="note reel trip">Text
+      <textarea id="editBody" rows="5" maxlength="5000"></textarea>
+    </label>
+    <p id="editError" class="small overdue" hidden></p>
+    <div class="dialog-actions">
+      <button type="button" id="editCancel" class="ghost">Abbrechen</button>
+      <button type="submit" class="primary">Speichern</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js" defer></script>
+</body>
+</html>
