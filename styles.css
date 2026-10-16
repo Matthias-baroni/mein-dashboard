@@ -1,31 +1,33 @@
 /* ===== Farben (hell & dunkel) ===== */
 :root {
-  --bg: #f5f3ef;
+  --bg: #f6f4f0;
   --card: #ffffff;
-  --text: #1f2328;
-  --muted: #6b7280;
-  --line: #e7e3dc;
-  --chip: #efeae2;
-  --input: #fbfaf7;
-  --accent: #3f6b57;
+  --text: #1d2521;
+  --muted: #6e7770;
+  --line: #e9e5de;
+  --chip: #f0ece5;
+  --input: #fcfbf8;
+  --accent: #46715e;
+  --accent-soft: #e4eee8;
   --accent-text: #ffffff;
-  --danger: #b4483f;
-  --overdue: #b4483f;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.05);
-  --radius: 16px;
+  --danger: #b04a40;
+  --overdue: #b04a40;
+  --shadow: 0 1px 2px rgba(30, 40, 35, 0.04), 0 6px 20px rgba(30, 40, 35, 0.06);
+  --radius: 18px;
   color-scheme: light;
 }
 
 html[data-theme="dark"] {
-  --bg: #14171c;
-  --card: #1d2128;
-  --text: #e8eaed;
-  --muted: #9aa3ad;
-  --line: #2c323b;
-  --chip: #262c35;
-  --input: #171b21;
-  --accent: #7fb59c;
-  --accent-text: #0f1512;
+  --bg: #121614;
+  --card: #1a201d;
+  --text: #e7ebe8;
+  --muted: #98a39c;
+  --line: #2a332e;
+  --chip: #232b26;
+  --input: #151b18;
+  --accent: #86bda2;
+  --accent-soft: #22302a;
+  --accent-text: #0e1511;
   --danger: #e07a70;
   --overdue: #e07a70;
   --shadow: none;
@@ -47,8 +49,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1 { font-size: 1.9rem; margin: 4px 0 12px; font-weight: 600; letter-spacing: -0.01em; }
-h2 { font-size: 1.05rem; margin: 0 0 12px; font-weight: 600; }
+h1 { font-size: 2rem; margin: 4px 0 14px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
+h2 { font-size: 1.05rem; margin: 0 0 14px; font-weight: 620; letter-spacing: -0.005em; }
 h3.group-title { font-size: 0.85rem; margin: 14px 0 6px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
 .muted { color: var(--muted); }
@@ -81,11 +83,29 @@ h3.group-title { font-size: 0.85rem; margin: 14px 0 6px; color: var(--muted); fo
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
 
-.brand { font-weight: 600; font-size: 1.05rem; }
+.brand {
+  font-weight: 650;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
 .top-actions { display: flex; gap: 8px; align-items: center; }
 
 /* ===== Layout mit Karten ===== */
@@ -114,12 +134,25 @@ h3.group-title { font-size: 0.85rem; margin: 14px 0 6px; color: var(--muted); fo
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 18px;
+  padding: 20px;
   box-shadow: var(--shadow);
   min-width: 0;
 }
 
-.eyebrow { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.hero {
+  background:
+    radial-gradient(circle at 100% 0%, var(--accent-soft), transparent 55%),
+    var(--card);
+  padding: 22px 22px 20px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
 
 .stats {
   display: grid;
@@ -129,14 +162,21 @@ h3.group-title { font-size: 0.85rem; margin: 14px 0 6px; color: var(--muted); fo
 }
 
 .stats div {
-  background: var(--chip);
-  border-radius: 12px;
-  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 8px;
   text-align: center;
 }
 
-.stats span { display: block; font-size: 1.5rem; font-weight: 600; }
-.stats small { color: var(--muted); font-size: 0.8rem; }
+.stats span {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.stats small { color: var(--muted); font-size: 0.78rem; }
 
 /* ===== Formulare & Buttons ===== */
 input, select, textarea {
@@ -147,8 +187,17 @@ input, select, textarea {
   color: var(--text);
   background: var(--input);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+}
+
+input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
 
 textarea { min-height: 80px; resize: vertical; }
 
@@ -166,15 +215,21 @@ button {
   color: var(--text);
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
 }
+
+button:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+button:active { transform: scale(0.98); }
 
 button.primary {
   background: var(--accent);
   color: var(--accent-text);
   border-color: transparent;
-  font-weight: 600;
+  font-weight: 620;
 }
+
+button.primary:hover { background: color-mix(in srgb, var(--accent) 88%, black); border-color: transparent; }
 
 button.ghost {
   min-height: 36px;
@@ -229,6 +284,7 @@ label {
 }
 
 .chip.active { background: var(--accent); color: var(--accent-text); }
+.chip:not(.active):hover { background: var(--accent-soft); }
 
 /* ===== Listen & Einträge ===== */
 .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
@@ -242,9 +298,14 @@ label {
   display: flex;
   gap: 12px;
   align-items: flex-start;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.task:hover, .link-item:hover, .note:hover {
+  background: color-mix(in srgb, var(--accent-soft) 45%, transparent);
 }
 
 .today-item { flex-direction: column; gap: 4px; }
@@ -283,9 +344,11 @@ label {
   border: 1px solid var(--line);
 }
 
-.prio-hoch { color: var(--danger); border-color: var(--danger); }
-.prio-mittel { color: var(--muted); }
-.prio-niedrig { color: var(--accent); border-color: var(--accent); }
+.prio-hoch { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: transparent; }
+.prio-mittel { color: var(--muted); background: var(--chip); border-color: transparent; }
+.prio-niedrig { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+
+.task.done { opacity: 0.7; }
 
 .row-actions {
   display: flex;
