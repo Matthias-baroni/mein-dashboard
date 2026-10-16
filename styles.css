@@ -74,6 +74,10 @@ h3.group-title { font-size: 0.85rem; margin: 14px 0 6px; color: var(--muted); fo
   box-shadow: var(--shadow);
 }
 
+.fallback { margin-top: 14px; }
+.fallback summary { cursor: pointer; padding: 6px 0; }
+.fallback form { margin-top: 10px; }
+
 /* ===== Kopfzeile ===== */
 .topbar {
   position: sticky;

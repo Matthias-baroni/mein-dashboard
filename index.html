@@ -13,11 +13,18 @@
 <main id="loginView" class="login" hidden>
   <section class="card login-card">
     <h1>Mein Dashboard</h1>
-    <p class="muted">Gib deine E-Mail-Adresse ein. Du bekommst einen Anmelde-Link.</p>
-    <form id="loginForm" class="stack">
-      <input id="loginEmail" type="email" placeholder="E-Mail-Adresse" required autocomplete="email">
-      <button type="submit" class="primary">Anmelde-Link senden</button>
+    <form id="passwordLoginForm" class="stack">
+      <input id="pwEmail" type="email" placeholder="E-Mail-Adresse" required autocomplete="username">
+      <input id="pwPassword" type="password" placeholder="Passwort" required autocomplete="current-password">
+      <button type="submit" class="primary">Anmelden</button>
     </form>
+    <details class="fallback">
+      <summary class="small muted">Stattdessen Anmelde-Link per E-Mail</summary>
+      <form id="loginForm" class="stack">
+        <input id="loginEmail" type="email" placeholder="E-Mail-Adresse" required autocomplete="email">
+        <button type="submit" class="ghost">Anmelde-Link senden</button>
+      </form>
+    </details>
     <p id="loginMsg" class="small muted" aria-live="polite"></p>
   </section>
 </main>
@@ -116,6 +123,16 @@
       <button type="submit" class="primary">Anlegen</button>
     </form>
     <ul class="list" id="tripList"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Konto &amp; Passwort</h2>
+    <form id="setPasswordForm" class="stack">
+      <p class="small muted">Lege ein Passwort fest, dann brauchst du keine E-Mail mehr zum Anmelden. Mindestens 8 Zeichen.</p>
+      <input id="newPassword" type="password" placeholder="Neues Passwort" required minlength="8" autocomplete="new-password">
+      <button type="submit" class="primary">Passwort speichern</button>
+    </form>
+    <p id="pwMsg" class="small muted" aria-live="polite"></p>
   </section>
 
   <section class="card">

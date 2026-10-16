@@ -794,6 +794,36 @@ document.getElementById("loginForm").addEventListener("submit", async (event) =>
     : "Fertig. Öffne den Link in deiner E-Mail auf diesem Gerät.";
 });
 
+document.getElementById("passwordLoginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const email = document.getElementById("pwEmail").value.trim();
+  const password = document.getElementById("pwPassword").value;
+  const msg = document.getElementById("loginMsg");
+  msg.textContent = "Anmeldung läuft …";
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  msg.textContent = error ? "Anmeldung fehlgeschlagen. E-Mail oder Passwort prüfen." : "";
+  if (!error) document.getElementById("pwPassword").value = "";
+});
+
+document.getElementById("setPasswordForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const input = document.getElementById("newPassword");
+  const msg = document.getElementById("pwMsg");
+  if (input.value.length < 8) {
+    msg.textContent = "Das Passwort braucht mindestens 8 Zeichen.";
+    return;
+  }
+
+  const { error } = await sb.auth.updateUser({ password: input.value });
+  if (error) {
+    msg.textContent = "Speichern hat nicht geklappt: " + error.message;
+    return;
+  }
+  input.value = "";
+  msg.textContent = "Passwort gespeichert. Ab jetzt kannst du dich damit anmelden.";
+});
+
 document.getElementById("logoutBtn").addEventListener("click", async () => {
   await sb.auth.signOut();
 });
