@@ -831,7 +831,7 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 /* ===== Hell / Dunkel ===== */
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  document.getElementById("themeToggle").textContent = theme === "dark" ? "☀" : "☾";
+  document.getElementById("themeToggle").textContent = theme === "dark" ? "Hell" : "Dunkel";
 }
 
 function initTheme() {
