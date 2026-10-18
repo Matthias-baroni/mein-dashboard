@@ -77,6 +77,32 @@ h3.group-title { font-size: 0.85rem; margin: 14px 0 6px; color: var(--muted); fo
   box-shadow: var(--shadow);
 }
 
+/* Einstellungen als eigene, einklappbare Gruppe */
+.settings > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  list-style: none;
+  min-height: 44px;
+}
+.settings > summary::-webkit-details-marker { display: none; }
+.settings[open] > summary { margin-bottom: 14px; }
+.settings-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .settings-grid { grid-template-columns: 1fr 1fr; } }
+.sub {
+  background: var(--bg);
+  border: 0.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  min-width: 0;
+}
+.sub h3 { margin: 0 0 10px; font-size: 0.95rem; font-weight: 600; }
+.sub .stack, .sub form { margin-bottom: 10px; }
+.settings .list { margin-top: 6px; }
+
 .fallback { margin-top: 14px; }
 .fallback summary { cursor: pointer; padding: 6px 0; }
 .fallback form { margin-top: 10px; }

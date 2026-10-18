@@ -670,6 +670,27 @@ document.getElementById("catForm").addEventListener("submit", async (event) => {
   if (ok) form.reset();
 });
 
+/* ===== Datensicherung: alle Einträge als JSON-Datei ===== */
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    categories: data.categories,
+    tasks: data.tasks,
+    notes: data.notes,
+    links: data.links,
+    reels: data.reels,
+    trips: data.trips,
+    trip_items: data.trip_items,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = h("a", { href: url, download: `dashboard-sicherung-${todayISO()}.json` });
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
 /* ===== Bearbeiten-Dialog ===== */
 const editDialog = document.getElementById("editDialog");
 

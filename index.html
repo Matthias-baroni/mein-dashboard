@@ -137,8 +137,11 @@
     <ul class="list" id="tripList"></ul>
   </section>
 
-  <section class="card">
-    <h2>Konto &amp; Passwort</h2>
+  <details class="card settings span-2">
+    <summary><h2>Einstellungen</h2><span class="small muted">Konto, Bereiche, Datensicherung</span></summary>
+    <div class="settings-grid">
+  <section class="sub">
+    <h3>Konto &amp; Passwort</h3>
     <form id="setPasswordForm" class="stack">
       <p class="small muted">Lege ein Passwort fest, dann brauchst du keine E-Mail mehr zum Anmelden. Mindestens 8 Zeichen.</p>
       <input id="newPassword" type="password" placeholder="Neues Passwort" required minlength="8" autocomplete="new-password">
@@ -147,14 +150,22 @@
     <p id="pwMsg" class="small muted" aria-live="polite"></p>
   </section>
 
-  <section class="card">
-    <h2>Bereiche (Kategorien)</h2>
+  <section class="sub">
+    <h3>Bereiche (Kategorien)</h3>
     <form id="catForm" class="inline-form">
       <input id="catName" placeholder="Neuer Bereich" required maxlength="60" autocomplete="off">
       <button type="submit" class="primary">Hinzufügen</button>
     </form>
     <ul class="list" id="catList"></ul>
   </section>
+
+  <section class="sub">
+    <h3>Datensicherung</h3>
+    <p class="small muted">Lade alle deine Einträge als Datei herunter, zum Beispiel für einen Backup-Ordner.</p>
+    <button type="button" id="exportBtn" class="primary">Sicherung herunterladen (JSON)</button>
+  </section>
+    </div>
+  </details>
 
 </main>
 
