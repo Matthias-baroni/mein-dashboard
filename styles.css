@@ -455,3 +455,73 @@ dialog {
 }
 
 dialog::backdrop { background: rgba(0, 0, 0, 0.4); }
+
+/* ===== Handy: ruhiger, mehr Luft zum Antippen ===== */
+@media (max-width: 640px) {
+  .topbar { padding: 10px 14px; }
+  .brand { font-size: 0.95rem; }
+  .top-actions { gap: 6px; }
+  .top-actions button { min-height: 40px; padding: 0 12px; }
+
+  .grid { padding: 12px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); gap: 12px; }
+  .card { padding: 14px; }
+  .sub { padding: 12px; }
+
+  h1 { font-size: 1.6rem; margin-bottom: 10px; }
+  h2 { font-size: 1rem; margin-bottom: 10px; }
+
+  /* Startseite: Zahlen kompakter */
+  .stats { gap: 6px; margin-top: 10px; }
+  .stats div { padding: 10px 4px; }
+  .stats span { font-size: 1.3rem; }
+  .stats small { font-size: 0.72rem; }
+
+  /* Filter als wischbare Leiste statt Umbruch */
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 10px -14px;
+    padding: 2px 14px;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex-shrink: 0; min-height: 38px; }
+
+  /* Aufgaben: Text oben, Aktionen darunter, klar getrennt */
+  .task { flex-wrap: wrap; padding: 12px; gap: 10px; }
+  .task-body { flex: 1 1 calc(100% - 40px); }
+  .task .row-actions {
+    width: 100%;
+    margin-left: 0;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--line);
+    justify-content: flex-end;
+  }
+
+  /* Buttons mit genug Abstand zum Antippen */
+  button.ghost { min-height: 40px; padding: 0 10px; }
+  button.primary { min-height: 46px; width: 100%; }
+  .form-grid .primary, .inline-form .primary { width: auto; }
+
+  /* Listen: etwas mehr Abstand, Trennlinie statt Kasten */
+  .list { gap: 8px; }
+  .today-item { padding: 10px 0; border: 0; border-bottom: 0.5px solid var(--line); border-radius: 0; }
+  .today-item:last-child { border-bottom: 0; }
+
+  .note .row-actions { justify-content: flex-start; }
+  .note .row-actions .muted { margin-right: auto; }
+
+  /* Schnellzugriffe und Reisen: Symbole größer antippbar */
+  .link-main { min-height: 52px; }
+  .trip summary { min-height: 52px; padding: 14px; }
+  .trip-body { padding: 0 14px 14px; }
+
+  /* Einstellungen: eine Spalte, zugeklappt wirkt ruhig */
+  .settings > summary { min-height: 52px; }
+  .settings-grid { gap: 12px; }
+
+  /* Dialoge fast bildschirmfüllend */
+  dialog { width: calc(100vw - 24px); padding: 16px; }
+  dialog .dialog-actions button { flex: 1; }
+}
