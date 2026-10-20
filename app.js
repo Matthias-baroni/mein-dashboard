@@ -691,6 +691,167 @@ document.getElementById("exportBtn").addEventListener("click", () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
+/* ===== Datensicherung einspielen =====
+   Ergänzt nur. Nichts wird gelöscht. Einträge, die schon da sind (gleiche ID bzw. gleicher Bereichsname), werden übersprungen. */
+const IMPORT_COLUMNS = {
+  tasks: ["title", "due", "category", "subcategory", "priority", "done"],
+  notes: ["text", "category"],
+  links: ["name", "url", "category"],
+  reels: ["url", "title", "category", "note"],
+  trips: ["title", "kind", "location", "start_date", "end_date", "notes"],
+  trip_items: ["text", "done"],
+};
+const IMPORT_LABEL = {
+  categories: "Bereiche",
+  tasks: "Aufgaben",
+  notes: "Notizen",
+  links: "Links",
+  reels: "Reels",
+  trips: "Reisen",
+  trip_items: "Packpunkte",
+};
+
+function setImportMsg(text) {
+  document.getElementById("importMsg").textContent = text;
+}
+
+function rowsOf(backup, table) {
+  return Array.isArray(backup[table]) ? backup[table].filter((row) => row && typeof row === "object") : [];
+}
+
+function pickColumns(row, columns) {
+  const out = {};
+  for (const column of columns) {
+    if (row[column] !== undefined) out[column] = row[column];
+  }
+  return out;
+}
+
+/* Nur Zeilen, die es in diesem Konto noch nicht gibt (gleiche ID = schon vorhanden). */
+function newRows(table, rows) {
+  const existing = new Set(data[table].map((item) => item.id));
+  return rows.filter((row) => !existing.has(row.id));
+}
+
+function newCategories(rows) {
+  const names = new Set(data.categories.map((c) => c.name));
+  return rows.filter((row) => typeof row.name === "string" && row.name.trim() && !names.has(row.name.trim()));
+}
+
+function countNew(backup) {
+  const counts = { categories: newCategories(rowsOf(backup, "categories")).length };
+  for (const table of Object.keys(IMPORT_COLUMNS)) {
+    counts[table] = newRows(table, rowsOf(backup, table)).length;
+  }
+  return counts;
+}
+
+async function importBackup(backup) {
+  const failed = [];
+  let added = 0;
+  const tripIds = new Map(); // ID aus der Sicherung -> ID in diesem Konto
+
+  const cats = newCategories(rowsOf(backup, "categories"));
+  if (cats.length) {
+    const { error } = await sb.from("categories").insert(
+      cats.map((c, i) => ({ name: c.name.trim().slice(0, 60), sort_order: data.categories.length + i + 1 }))
+    );
+    if (error) failed.push(IMPORT_LABEL.categories);
+    else added += cats.length;
+  }
+
+  for (const table of ["tasks", "notes", "links", "reels"]) {
+    const rows = newRows(table, rowsOf(backup, table));
+    if (!rows.length) continue;
+    const { error } = await sb.from(table).insert(rows.map((row) => pickColumns(row, IMPORT_COLUMNS[table])));
+    if (error) failed.push(IMPORT_LABEL[table]);
+    else added += rows.length;
+  }
+
+  // Reisen einzeln anlegen, damit die neuen IDs für die Packlisten bekannt sind.
+  for (const trip of rowsOf(backup, "trips")) {
+    const existing = data.trips.find((t) => t.id === trip.id);
+    if (existing) {
+      tripIds.set(trip.id, existing.id);
+      continue;
+    }
+    const { data: created, error } = await sb
+      .from("trips")
+      .insert(pickColumns(trip, IMPORT_COLUMNS.trips))
+      .select("id")
+      .single();
+    if (error || !created) {
+      failed.push(IMPORT_LABEL.trips);
+      continue;
+    }
+    tripIds.set(trip.id, created.id);
+    added++;
+  }
+
+  const items = newRows("trip_items", rowsOf(backup, "trip_items")).filter((item) => tripIds.has(item.trip_id));
+  if (items.length) {
+    const payload = items.map((item) => ({
+      ...pickColumns(item, IMPORT_COLUMNS.trip_items),
+      trip_id: tripIds.get(item.trip_id),
+    }));
+    const { error } = await sb.from("trip_items").insert(payload);
+    if (error) failed.push(IMPORT_LABEL.trip_items);
+    else added += items.length;
+  }
+
+  await loadAll();
+  return { added, failed: [...new Set(failed)] };
+}
+
+document.getElementById("importBtn").addEventListener("click", () => {
+  document.getElementById("importFile").click();
+});
+
+document.getElementById("importFile").addEventListener("change", async (event) => {
+  const input = event.target;
+  const file = input.files[0];
+  input.value = "";
+  if (!file) return;
+
+  let backup;
+  try {
+    backup = JSON.parse(await file.text());
+  } catch {
+    setImportMsg("Die Datei konnte nicht gelesen werden. Bitte eine Sicherung aus diesem Dashboard wählen.");
+    return;
+  }
+
+  const knownTables = ["categories", ...Object.keys(IMPORT_COLUMNS)];
+  const isBackup = backup && typeof backup === "object" && knownTables.some((t) => Array.isArray(backup[t]));
+  if (!isBackup) {
+    setImportMsg("Das sieht nicht nach einer Sicherung aus diesem Dashboard aus.");
+    return;
+  }
+
+  const counts = countNew(backup);
+  const summary = Object.entries(counts)
+    .filter(([, n]) => n > 0)
+    .map(([table, n]) => `${n} ${IMPORT_LABEL[table]}`)
+    .join(", ");
+  if (!summary) {
+    setImportMsg("Alle Einträge aus dieser Sicherung sind schon vorhanden. Es wurde nichts geändert.");
+    return;
+  }
+
+  if (!confirm(`Hinzufügen: ${summary}?\n\nVorhandene Einträge bleiben unverändert. Es wird nichts gelöscht.`)) {
+    setImportMsg("Abgebrochen. Es wurde nichts geändert.");
+    return;
+  }
+
+  setImportMsg("Sicherung wird eingespielt …");
+  const { added, failed } = await importBackup(backup);
+  setImportMsg(
+    failed.length
+      ? `Teilweise eingespielt: ${added} Einträge. Nicht geklappt bei: ${failed.join(", ")}.`
+      : `Fertig. ${added} Einträge wurden ergänzt.`
+  );
+});
+
 /* ===== Bearbeiten-Dialog ===== */
 const editDialog = document.getElementById("editDialog");
 

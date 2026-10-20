@@ -462,6 +462,17 @@ button.danger { color: var(--danger); }
 }
 
 .settings-grid h2 { margin-bottom: 12px; }
+.import-box {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 0.5px solid var(--line);
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.import-box p { margin: 0; }
+.import-box button { width: 100%; }
+@media (min-width: 720px) { .import-box button { width: auto; } }
 .settings-grid p { margin: 0 0 12px; }
 .settings-grid .list { margin-top: 12px; }
 

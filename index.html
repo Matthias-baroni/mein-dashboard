@@ -234,6 +234,12 @@
         <h2>Datensicherung</h2>
         <p class="small muted">Lade alle deine Einträge als Datei herunter, zum Beispiel für einen Backup-Ordner.</p>
         <button type="button" id="exportBtn" class="primary">Sicherung herunterladen (JSON)</button>
+        <div class="import-box">
+          <p class="small muted">Eine Sicherung wieder einspielen. Es werden nur fehlende Einträge ergänzt, nichts wird gelöscht.</p>
+          <button type="button" id="importBtn">Sicherung einspielen (JSON)</button>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+          <p id="importMsg" class="small muted" aria-live="polite"></p>
+        </div>
       </section>
     </div>
   </section>
