@@ -893,6 +893,7 @@ function applyPendingReel() {
   }
   if (!pending) return;
 
+  showSection("reels");
   document.getElementById("reelUrl").value = pending;
   document.getElementById("reelForm").scrollIntoView({ behavior: "smooth", block: "center" });
   document.getElementById("reelTitle").focus();
@@ -900,8 +901,43 @@ function applyPendingReel() {
 
 takePendingReelFromUrl();
 
+/* ===== Bereiche (Leiste oben) ===== */
+const SECTION_KEY = "mein-dashboard-section";
+const SECTIONS = ["start", "tasks", "notes", "links", "reels", "trips", "settings"];
+
+function showSection(name) {
+  const target = SECTIONS.includes(name) ? name : "start";
+  document.querySelectorAll("[data-view]").forEach((view) => {
+    view.hidden = view.dataset.view !== target;
+  });
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.setAttribute("aria-selected", String(tab.dataset.tab === target));
+  });
+  try {
+    localStorage.setItem(SECTION_KEY, target);
+  } catch {
+    // Ohne Speicher wird der Bereich beim nächsten Öffnen nicht gemerkt.
+  }
+}
+
+function savedSection() {
+  try {
+    return localStorage.getItem(SECTION_KEY);
+  } catch {
+    return null;
+  }
+}
+
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    showSection(tab.dataset.tab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+
 /* ===== Start ===== */
 initTheme();
+showSection(savedSection() || "start");
 
 if (!window.supabase || !window.DASHBOARD_CONFIG) {
   showLogin();

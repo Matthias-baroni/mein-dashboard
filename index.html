@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Mein persönliches Dashboard">
+  <meta name="theme-color" content="#F5F4F0">
   <title>Mein Dashboard</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,7 +20,7 @@
       <button type="submit" class="primary">Anmelden</button>
     </form>
     <details class="fallback">
-      <summary class="small muted">Stattdessen Anmelde-Link per E-Mail</summary>
+      <summary class="small">Stattdessen Anmelde-Link per E-Mail</summary>
       <form id="loginForm" class="stack">
         <input id="loginEmail" type="email" placeholder="E-Mail-Adresse" required autocomplete="email">
         <button type="submit" class="ghost">Anmelde-Link senden</button>
@@ -33,139 +34,209 @@
 <div id="appView" hidden>
 
 <header class="topbar">
-  <div class="brand">Mein Dashboard</div>
-  <div class="top-actions">
-    <button type="button" id="themeToggle" class="ghost" aria-label="Hell/Dunkel umschalten">Dunkel</button>
-    <button type="button" id="logoutBtn" class="ghost">Abmelden</button>
+  <div class="topbar-row">
+    <div class="brand">Mein Dashboard</div>
+    <div class="top-actions">
+      <button type="button" id="themeToggle" class="ghost" aria-label="Hell/Dunkel umschalten">Dunkel</button>
+      <button type="button" id="logoutBtn" class="ghost">Abmelden</button>
+    </div>
   </div>
+  <nav class="tabs" aria-label="Bereiche">
+    <button type="button" class="tab" data-tab="start">Start</button>
+    <button type="button" class="tab" data-tab="tasks">Aufgaben</button>
+    <button type="button" class="tab" data-tab="notes">Notizen</button>
+    <button type="button" class="tab" data-tab="links">Links</button>
+    <button type="button" class="tab" data-tab="reels">Reels</button>
+    <button type="button" class="tab" data-tab="trips">Camper &amp; Reisen</button>
+    <button type="button" class="tab" data-tab="settings">Einstellungen</button>
+  </nav>
 </header>
 
-<main class="grid">
+<main class="page">
 
-  <section class="card hero">
-    <p class="eyebrow" id="todayDate"></p>
-    <h1 id="greeting"></h1>
-    <div class="stats">
-      <div><span id="statOpen">0</span><small>offen</small></div>
-      <div><span id="statWeek">0</span><small>nächste 7 Tage</small></div>
-      <div><span id="statOverdue">0</span><small>überfällig</small></div>
+  <!-- Start -->
+  <section class="view" data-view="start">
+    <div class="card hero">
+      <p class="eyebrow" id="todayDate"></p>
+      <h1 id="greeting"></h1>
+      <div class="stats">
+        <div><span id="statOpen">0</span><small>offen</small></div>
+        <div><span id="statWeek">0</span><small>nächste 7 Tage</small></div>
+        <div><span id="statOverdue">0</span><small>überfällig</small></div>
+      </div>
+    </div>
+
+    <div class="start-grid">
+      <section class="card">
+        <div class="card-head"><h2>Nächste 7 Tage</h2></div>
+        <ul class="list" id="weekList"></ul>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Projekte &amp; Tools</h2></div>
+        <ul class="list">
+          <li class="link-item">
+            <a class="link-main" href="https://post-pilot-green.vercel.app" target="_blank" rel="noopener noreferrer">
+              <span class="link-name">ContentPilot</span>
+              <span class="small muted">Beiträge planen für Instagram, Facebook und LinkedIn</span>
+            </a>
+          </li>
+        </ul>
+      </section>
     </div>
   </section>
 
-  <section class="card">
-    <h2>Nächste 7 Tage</h2>
-    <ul class="list" id="weekList"></ul>
+  <!-- Aufgaben -->
+  <section class="view" data-view="tasks" hidden>
+    <div class="split">
+      <section class="card split-main">
+        <div class="card-head"><h2>Aufgaben</h2></div>
+        <div class="chips" id="taskFilterChips"></div>
+        <ul class="list" id="taskList"></ul>
+      </section>
+
+      <section class="card split-side">
+        <h2>Neue Aufgabe</h2>
+        <form id="taskForm" class="stack">
+          <input id="taskTitle" placeholder="Was ist zu tun?" required maxlength="200" autocomplete="off">
+          <div class="pair">
+            <input id="taskDue" type="date" aria-label="Fälligkeitsdatum">
+            <select id="taskPriority" aria-label="Priorität">
+              <option value="hoch">Hoch</option>
+              <option value="mittel" selected>Mittel</option>
+              <option value="niedrig">Niedrig</option>
+            </select>
+          </div>
+          <div class="pair">
+            <select id="taskCategory" aria-label="Kategorie"></select>
+            <input id="taskSub" placeholder="Unterbereich" maxlength="60" autocomplete="off" aria-label="Unterbereich">
+          </div>
+          <button type="submit" class="primary">Hinzufügen</button>
+        </form>
+      </section>
+    </div>
   </section>
 
-  <section class="card span-2" id="tasks">
-    <h2>Aufgaben</h2>
-    <form id="taskForm" class="form-grid">
-      <input id="taskTitle" placeholder="Neue Aufgabe" required maxlength="200" autocomplete="off">
-      <input id="taskDue" type="date" aria-label="Fälligkeitsdatum">
-      <select id="taskCategory" aria-label="Kategorie"></select>
-      <input id="taskSub" placeholder="Unterbereich (optional)" maxlength="60" autocomplete="off">
-      <select id="taskPriority" aria-label="Priorität">
-        <option value="hoch">Hoch</option>
-        <option value="mittel" selected>Mittel</option>
-        <option value="niedrig">Niedrig</option>
-      </select>
-      <button type="submit" class="primary">Hinzufügen</button>
-    </form>
-    <div class="chips" id="taskFilterChips"></div>
-    <ul class="list" id="taskList"></ul>
+  <!-- Notizen -->
+  <section class="view" data-view="notes" hidden>
+    <div class="split">
+      <section class="card split-main">
+        <div class="card-head"><h2>Notizen</h2></div>
+        <div class="chips" id="noteFilterChips"></div>
+        <ul class="list" id="noteList"></ul>
+      </section>
+
+      <section class="card split-side">
+        <h2>Neue Notiz</h2>
+        <form id="noteForm" class="stack">
+          <textarea id="noteText" rows="4" placeholder="Gedanke, Idee, Einkaufsliste …" maxlength="5000"></textarea>
+          <select id="noteCategory" aria-label="Bereich der Notiz"></select>
+          <button type="submit" class="primary">Notiz speichern</button>
+        </form>
+      </section>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Schnelle Notizen</h2>
-    <form id="noteForm" class="stack">
-      <textarea id="noteText" rows="3" placeholder="Gedanke, Idee, Einkaufsliste …" maxlength="5000"></textarea>
-      <select id="noteCategory" aria-label="Kategorie der Notiz"></select>
-      <button type="submit" class="primary">Notiz speichern</button>
-    </form>
-    <div class="chips" id="noteFilterChips"></div>
-    <ul class="list" id="noteList"></ul>
+  <!-- Links -->
+  <section class="view" data-view="links" hidden>
+    <div class="split">
+      <section class="card split-main">
+        <div class="card-head"><h2>Schnellzugriffe</h2></div>
+        <div id="linkList"></div>
+      </section>
+
+      <section class="card split-side">
+        <h2>Neuer Link</h2>
+        <form id="linkForm" class="stack">
+          <input id="linkName" placeholder="Name (optional)" maxlength="100" autocomplete="off">
+          <input id="linkUrl" placeholder="Adresse, z. B. example.de" required autocomplete="off" inputmode="url">
+          <select id="linkCategory" aria-label="Bereich des Links"></select>
+          <button type="submit" class="primary">Link hinzufügen</button>
+        </form>
+      </section>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Schnellzugriffe</h2>
-    <form id="linkForm" class="stack">
-      <input id="linkName" placeholder="Name (optional)" maxlength="100" autocomplete="off">
-      <input id="linkUrl" placeholder="Adresse, z. B. example.de" required autocomplete="off" inputmode="url">
-      <select id="linkCategory" aria-label="Bereich des Links"></select>
-      <button type="submit" class="primary">Link hinzufügen</button>
-    </form>
-    <div id="linkList" class="groups"></div>
+  <!-- Reels -->
+  <section class="view" data-view="reels" hidden>
+    <div class="split">
+      <section class="card split-main">
+        <div class="card-head"><h2>Gespeicherte Reels</h2></div>
+        <ul class="list" id="reelList"></ul>
+      </section>
+
+      <section class="card split-side">
+        <h2>Neues Reel</h2>
+        <form id="reelForm" class="stack">
+          <input id="reelUrl" placeholder="Link zum Reel einfügen" required autocomplete="off" inputmode="url">
+          <input id="reelTitle" placeholder="Titel (optional)" maxlength="200" autocomplete="off">
+          <select id="reelCategory" aria-label="Bereich des Reels"></select>
+          <textarea id="reelNote" rows="3" placeholder="Beschreibung oder Stichpunkte (optional)" maxlength="5000"></textarea>
+          <button type="submit" class="primary">Reel speichern</button>
+        </form>
+      </section>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Projekte &amp; Tools</h2>
-    <ul class="list">
-      <li class="link-item">
-        <a class="link-main" href="https://post-pilot-green.vercel.app" target="_blank" rel="noopener noreferrer">
-          <span class="link-name">ContentPilot</span>
-          <span class="small muted">Beiträge planen für Instagram, Facebook und LinkedIn</span>
-        </a>
-      </li>
-    </ul>
+  <!-- Camper & Reisen -->
+  <section class="view" data-view="trips" hidden>
+    <div class="split">
+      <section class="card split-main" id="trips">
+        <div class="card-head"><h2>Camper &amp; Reisen</h2></div>
+        <ul class="list" id="tripList"></ul>
+      </section>
+
+      <section class="card split-side">
+        <h2>Neue Reise oder Tour</h2>
+        <form id="tripForm" class="stack">
+          <input id="tripTitle" placeholder="Name der Reise oder Tour" required maxlength="200" autocomplete="off">
+          <div class="pair">
+            <select id="tripKind" aria-label="Art">
+              <option value="Reise">Reise</option>
+              <option value="Trekking &amp; Campen">Trekking &amp; Campen</option>
+            </select>
+            <input id="tripLocation" placeholder="Ort / Region" maxlength="200" autocomplete="off" aria-label="Ort oder Region">
+          </div>
+          <div class="pair">
+            <label>Start <input id="tripStart" type="date"></label>
+            <label>Ende <input id="tripEnd" type="date"></label>
+          </div>
+          <button type="submit" class="primary">Anlegen</button>
+        </form>
+      </section>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Reels aus Instagram</h2>
-    <form id="reelForm" class="stack">
-      <input id="reelUrl" placeholder="Link zum Reel einfügen" required autocomplete="off" inputmode="url">
-      <input id="reelTitle" placeholder="Titel (optional)" maxlength="200" autocomplete="off">
-      <select id="reelCategory" aria-label="Kategorie des Reels"></select>
-      <textarea id="reelNote" rows="2" placeholder="Beschreibung oder Stichpunkte (optional)" maxlength="5000"></textarea>
-      <button type="submit" class="primary">Reel speichern</button>
-    </form>
-    <ul class="list" id="reelList"></ul>
-  </section>
-
-  <section class="card span-2" id="trips">
-    <h2>Camper &amp; Reisen</h2>
-    <form id="tripForm" class="form-grid trip-form">
-      <input id="tripTitle" placeholder="Name der Reise oder Tour" required maxlength="200" autocomplete="off">
-      <select id="tripKind" aria-label="Art">
-        <option value="Reise">Reise</option>
-        <option value="Trekking &amp; Campen">Trekking &amp; Campen</option>
-      </select>
-      <input id="tripLocation" placeholder="Ort / Region" maxlength="200" autocomplete="off">
-      <input id="tripStart" type="date" aria-label="Start">
-      <input id="tripEnd" type="date" aria-label="Ende">
-      <button type="submit" class="primary">Anlegen</button>
-    </form>
-    <ul class="list" id="tripList"></ul>
-  </section>
-
-  <details class="card settings span-2">
-    <summary><h2>Einstellungen</h2><span class="small muted">Konto, Bereiche, Datensicherung</span></summary>
+  <!-- Einstellungen -->
+  <section class="view" data-view="settings" hidden>
     <div class="settings-grid">
-  <section class="sub">
-    <h3>Konto &amp; Passwort</h3>
-    <form id="setPasswordForm" class="stack">
-      <p class="small muted">Lege ein Passwort fest, dann brauchst du keine E-Mail mehr zum Anmelden. Mindestens 8 Zeichen.</p>
-      <input id="newPassword" type="password" placeholder="Neues Passwort" required minlength="8" autocomplete="new-password">
-      <button type="submit" class="primary">Passwort speichern</button>
-    </form>
-    <p id="pwMsg" class="small muted" aria-live="polite"></p>
-  </section>
+      <section class="card">
+        <h2>Konto &amp; Passwort</h2>
+        <form id="setPasswordForm" class="stack">
+          <p class="small muted">Lege ein Passwort fest, dann brauchst du keine E-Mail mehr zum Anmelden. Mindestens 8 Zeichen.</p>
+          <input id="newPassword" type="password" placeholder="Neues Passwort" required minlength="8" autocomplete="new-password">
+          <button type="submit" class="primary">Passwort speichern</button>
+        </form>
+        <p id="pwMsg" class="small muted" aria-live="polite"></p>
+      </section>
 
-  <section class="sub">
-    <h3>Bereiche (Kategorien)</h3>
-    <form id="catForm" class="inline-form">
-      <input id="catName" placeholder="Neuer Bereich" required maxlength="60" autocomplete="off">
-      <button type="submit" class="primary">Hinzufügen</button>
-    </form>
-    <ul class="list" id="catList"></ul>
-  </section>
+      <section class="card">
+        <h2>Bereiche</h2>
+        <p class="small muted">Eigene Bereiche für Aufgaben, Notizen, Links und Reels.</p>
+        <form id="catForm" class="inline-form">
+          <input id="catName" placeholder="Neuer Bereich" required maxlength="60" autocomplete="off" aria-label="Name des neuen Bereichs">
+          <button type="submit" class="primary">Hinzufügen</button>
+        </form>
+        <ul class="list" id="catList"></ul>
+      </section>
 
-  <section class="sub">
-    <h3>Datensicherung</h3>
-    <p class="small muted">Lade alle deine Einträge als Datei herunter, zum Beispiel für einen Backup-Ordner.</p>
-    <button type="button" id="exportBtn" class="primary">Sicherung herunterladen (JSON)</button>
-  </section>
+      <section class="card">
+        <h2>Datensicherung</h2>
+        <p class="small muted">Lade alle deine Einträge als Datei herunter, zum Beispiel für einen Backup-Ordner.</p>
+        <button type="button" id="exportBtn" class="primary">Sicherung herunterladen (JSON)</button>
+      </section>
     </div>
-  </details>
+  </section>
 
 </main>
 
